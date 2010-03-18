@@ -101,7 +101,7 @@ rem ***************************************************************************
   )
   echo ‘®§¤ ñ¬: %zip-name%
 
-pkzip25 -add -dir=current %exclude% %path-to-archive%\%zip-name% @%lst-file%
+pkzipc -add -dir=current %exclude% %path-to-archive%\%zip-name% @%lst-file%
 
 exit
 
