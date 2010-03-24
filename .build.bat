@@ -10,7 +10,7 @@ echo   set bcc=C:\Program Files\Embarcadero\RAD Studio\7.0
 echo   set vc=C:\Program Files\Microsoft Visual Studio 9.0\VC
 echo   set vcsdk=C:\Program Files\Microsoft SDKs\Windows\v6.0A
 echo   set boost=C:\Program Files\boost_1_42_0
-echo   set old_boost=C:\Program Files\boost_1_42_0
+echo   set old_boost=C:\Program Files\Embarcadero\RAD Studio\7.0\include\boost_1_39
 echo.
 
 :usage
