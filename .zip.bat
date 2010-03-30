@@ -111,7 +111,7 @@ rem ***************************************************************************
 
 :getver
    
-  sed -n -e "/^#define VERSION \"\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\)\([a-z]\?\) *\(.*\)\"/s//set vermajor=\1\&set verminor=\2\&set verrelease=\3\&set verpatch=\4\&set verstate=\5/p" -e "/^#define BUILDNO \"\[build \([0-9]*\)\]\"/s//set verbuild=\1/p" -e "/^#define BUILDDATE \"\(.*\)\"/s//set verdate=\1/p" >tmp.bat
+  sed -n -e "/^#define VERSION L\?\"\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\)\([a-z]\?\) *\(.*\)\"/s//set vermajor=\1\&set verminor=\2\&set verrelease=\3\&set verpatch=\4\&set verstate=\5/p" -e "/^#define BUILDNO L\?\"\[build \([0-9]*\)\]\"/s//set verbuild=\1/p" -e "/^#define BUILDDATE L\?\"\(.*\)\"/s//set verdate=\1/p" >tmp.bat
   rem          Начало строки       major       minor       release   patch       state                                                                                                     Строка с билдом             Номер билда                              Строка с датой       Дата
   call tmp.bat
   del tmp.bat

@@ -99,7 +99,7 @@ if defined error (
 )
 echo %vermajor%.%verminor%.%verrelease%%verpatch%%verstate% [build %verbranch%%verbuild%] от %verdate% %vertime%
 
-sed -e "s/^#define VERSION \".*\"/#define VERSION \"%vermajor%.%verminor%.%verrelease%%verpatch%%verstate%\"/" -e "s/^#define BUILDNO \".*\"/#define BUILDNO \"[build %verbranch%%verbuild%]\"/" -e "s/^#define BUILDDATE \".*\"/#define BUILDDATE \"%verdate%\"/" -e "s/^#define BUILDTIME \".*\"/#define BUILDTIME \"%vertime%\"/" < %unit-with-ver% > tmp.tmp
+sed -e "s/^#define VERSION \(L\)\?\".*\"/#define VERSION \1\"%vermajor%.%verminor%.%verrelease%%verpatch%%verstate%\"/" -e "s/^#define BUILDNO \(L\)\?\".*\"/#define BUILDNO \1\"[build %verbranch%%verbuild%]\"/" -e "s/^#define BUILDDATE \(L\)\?\".*\"/#define BUILDDATE \1\"%verdate%\"/" -e "s/^#define BUILDTIME \(L\)\?\".*\"/#define BUILDTIME \1\"%vertime%\"/" < %unit-with-ver% > tmp.tmp
 
 if exist %unit-with-ver%.old echo Смена версии не произведена. Удалите файл %unit-with-ver%.old и повторите & goto end
 ren %unit-with-ver% %unit-with-ver%.old
@@ -114,7 +114,7 @@ exit
 rem *** getver  ***
 :getver
    
-   sed -n -e "/^#define VERSION \"\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\)\([a-z]\?\) *\(.*\)\"/s//set vermajor=\1\&set verminor=\2\&set verrelease=\3\&set verpatch=\4\&set verstate=\5/p" -e "/^#define BUILDNO \"\[build \([0-9-]\+\-\)\?\([0-9]\+\)\]\"/s//set verbranch=\1\&set verbuild=\2/p" -e "/^#define BUILDDATE \"\(.*\)\"/s//set verdate=\1/p" -e "/^#define BUILDTIME \"\(.*\)\"/s//set vertime=\1/p" >tmp.bat
+   sed -n -e "/^#define VERSION L\?\"\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\)\([a-z]\?\) *\(.*\)\"/s//set vermajor=\1\&set verminor=\2\&set verrelease=\3\&set verpatch=\4\&set verstate=\5/p" -e "/^#define BUILDNO L\?\"\[build \([0-9-]\+\-\)\?\([0-9]\+\)\]\"/s//set verbranch=\1\&set verbuild=\2/p" -e "/^#define BUILDDATE L\?\"\(.*\)\"/s//set verdate=\1/p" -e "/^#define BUILDTIME L\?\"\(.*\)\"/s//set vertime=\1/p" >tmp.bat
    rem          Начало строки       major       minor       release   patch       state                                                                                                     Строка с билдом             Номер ветки     Номер билда                                                      Строка с датой       Дата                               Строка со временем   Время
    call tmp.bat
    del tmp.bat
