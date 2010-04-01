@@ -1,56 +1,122 @@
 @echo off
-if "%2"=="" goto usage
-goto start
-
-:err_params
-
-echo Не заданы некоторые параметры для данной системы:
-echo.
-echo   set bcc=C:\Program Files\Embarcadero\RAD Studio\7.0
-echo   set vc=C:\Program Files\Microsoft Visual Studio 9.0\VC
-echo   set vcsdk=C:\Program Files\Microsoft SDKs\Windows\v6.0A
-echo   set boost=C:\Program Files\boost_1_42_0
-echo   set old_boost=C:\Program Files\Embarcadero\RAD Studio\7.0\include\boost_1_39
-echo.
+goto init
 
 :usage
 
-echo Запуск скрипта:
-echo   .build.bat compiler file
+echo Примеры параметров запускающего скрипта
+echo   set bcc=C:\Program Files\Embarcadero\RAD Studio\7.0
+echo   set vc=D:\Program Files\Microsoft Visual Studio 9.0\VC
+echo   set vc-sdk=C:\Program Files\Microsoft SDKs\Windows\v6.0A
+echo   set vc-path=%vc%\Common7\IDE
+echo   set lib-boost=@boost-trunk
+echo   set lib-boost-1-42=D:\Program Files\boost_1_42_0
+echo   set lib-boost-1-42-to=boost
+echo   set lib-bcc-boost=%bcc%\include\boost_1_39
+echo   set lib-bcc-boost-to=boost
+echo   set lib-boost-trunk=D:\Program Files\boost-trunk
+echo   set lib-boost-trunk-to=boost
 echo.
-echo   где compiler - bcc/bcc_old_boost/vc
+echo Запуск скрипта:
+echo   .build.bat compiler [+lib]... file
+echo.
+echo   где compiler - bcc/vc
 echo       file - файл с исходными текстами
 
 exit
 
-:start
+:init
+setlocal ENABLEDELAYEDEXPANSION
 
-if "%1"=="bcc" (
+set compiler=%1
+if not defined compiler (
+  echo Не указан компилятор
+  echo.
+  goto usage
+)
 
-  if not defined bcc goto err_params
-  if not defined boost goto err_params
+:initlibs
+shift /1
+set lib=%1
+if not "%lib:~0,1%"=="+" goto initfiles
+set lib=%lib:~1%
+:initlibs_link
+if not defined %lib% (
+  echo Не определён параметр %lib%
+  echo.
+  goto usage
+)
 
-  del %~n2.exe 2> nul
-  bcc32 -I"%bcc%\include" -I"%boost%" -O2 %~n2.cpp
+if "!%lib%:~0,1!"=="@" (
+  set lib=!%lib%:~1!
+  goto initlibs_link
+)
 
-) else if "%1"=="bcc_old_boost" (
+if not defined %lib%-to (
+  set _%lib%=!%lib%!
+) else (
+  set _!%lib%-to!=!%lib%!
+)
 
-  if not defined bcc goto err_params
-  if not defined old_boost goto err_params
+if not defined libs (
+  set libs=libs: %lib%
+) else (
+  set libs=%libs%, %lib%
+)
 
-  del %~n2.exe 2> nul
-  bcc32 -I"%bcc%\include" -I"%old_boost%" -O2 %~n2.cpp
+goto initlibs
 
-) else if "%1"=="vc" (
 
-  if not defined vc goto err_params
-  if not defined vcsdk goto err_params
-  if not defined boost goto err_params
+:initfiles
+if "%1"=="" (
+  echo Не задан файл компиляции
+  echo.
+  goto usage
+)
 
-  del %~n2.exe 2> nul
-  cl /EHsc /I "%vc%\include" /I "%vcsdk%\Include" /I "%boost%" %~n2.cpp /link /LIBPATH:"%vc%\lib" /LIBPATH:"%vcsdk%\Lib"
+
+echo compiler: %compiler%
+echo %libs%
+echo _boost=%_boost%
+echo _wx=%_wx%
+echo.
+
+del %~n1.exe 2> nul
+
+if %compiler%==bcc (
+
+  set include=-I"%bcc%\include"
+  if defined _boost (
+    set include=%include% -I"%_boost%"
+  )
+
+  set PATH=!PATH!;%bcc%\bin
+  if defined bcc-path set PATH=!PATH!;%bcc-path%
+  set PATH
+
+  bcc32.exe %include% -O2 %1
+
+) else if %compiler%==vc (
+
+  if not defined vc-sdk (
+    echo Не задан параметр vc-sdk
+    echo.
+    goto usage
+  )
+
+  set include=/I "%vc%\include" /I "%vc-sdk%\Include"
+  if defined _boost (
+    set include=%include% /I "%_boost%"
+  )
+
+  set PATH=!PATH!;%vc%\bin
+  if defined vc-path set PATH=!PATH!;%vc-path%
+  set PATH
+
+  cl.exe /EHsc %include% %1 /link /LIBPATH:"%vc%\lib" /LIBPATH:"%vcsdk%\Lib"
 
 ) else (
+  rem echo Неверно задан компилятор
+  echo.
   goto usage
 )
 
@@ -61,5 +127,5 @@ if not "%ERRORLEVEL%"=="0" (
 )
 
 echo.
-echo ^>%~n2.exe
-%~n2.exe
+echo ^>%~n1.exe
+%~n1.exe
