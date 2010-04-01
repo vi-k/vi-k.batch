@@ -76,8 +76,8 @@ if "%1"=="" (
 
 echo compiler: %compiler%
 echo %libs%
-echo _boost=%_boost%
-echo _wx=%_wx%
+rem echo _boost=%_boost%
+rem echo _wx=%_wx%
 echo.
 
 del %~n1.exe 2> nul
@@ -86,14 +86,13 @@ if %compiler%==bcc (
 
   set include=-I"%bcc%\include"
   if defined _boost (
-    set include=%include% -I"%_boost%"
+    set include=!include! -I"%_boost%"
   )
 
   set PATH=!PATH!;%bcc%\bin
   if defined bcc-path set PATH=!PATH!;%bcc-path%
-  set PATH
 
-  bcc32.exe %include% -O2 %1
+  bcc32.exe !include! -O2 %1
 
 ) else if %compiler%==vc (
 
@@ -105,14 +104,13 @@ if %compiler%==bcc (
 
   set include=/I "%vc%\include" /I "%vc-sdk%\Include"
   if defined _boost (
-    set include=%include% /I "%_boost%"
+    set include=!include! /I "%_boost%"
   )
 
   set PATH=!PATH!;%vc%\bin
   if defined vc-path set PATH=!PATH!;%vc-path%
-  set PATH
 
-  cl.exe /EHsc %include% %1 /link /LIBPATH:"%vc%\lib" /LIBPATH:"%vcsdk%\Lib"
+  cl.exe /EHsc !include! %1 /link /LIBPATH:"%vc%\lib" /LIBPATH:"%vc-sdk%\Lib"
 
 ) else (
   rem echo Неверно задан компилятор
