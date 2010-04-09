@@ -110,7 +110,7 @@ if %compiler%==bcc (
   set PATH=!PATH!;%vc%\bin
   if defined vc-path set PATH=!PATH!;%vc-path%
 
-  cl.exe /EHsc !include! %1 /link /LIBPATH:"%vc%\lib" /LIBPATH:"%vc-sdk%\Lib"
+  cl.exe /EHsc !include! %1 /link /LIBPATH:"%vc%\lib" /LIBPATH:"%vc-sdk%\Lib" user32.lib
 
 ) else (
   rem echo Неверно задан компилятор
