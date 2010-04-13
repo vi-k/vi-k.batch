@@ -19,7 +19,7 @@ echo.
 echo Запуск скрипта:
 echo   .build.bat compiler [+lib]... file
 echo.
-echo   где compiler - bcc/vc
+echo   где compiler - bcc/vc/intel
 echo       file - файл с исходными текстами
 
 exit
@@ -33,6 +33,7 @@ if not defined compiler (
   echo.
   goto usage
 )
+echo compiler: %compiler%
 
 :initlibs
 shift /1
@@ -74,7 +75,6 @@ if "%1"=="" (
 )
 
 
-echo compiler: %compiler%
 echo %libs%
 rem echo _boost=%_boost%
 rem echo _wx=%_wx%
@@ -103,17 +103,49 @@ if %compiler%==bcc (
   )
 
   set include=/I "%vc%\include" /I "%vc-sdk%\Include"
+  
   if defined _boost (
     set include=!include! /I "%_boost%"
+  )
+
+  set link=
+
+  if defined _win32 (
+    set link=!link! "%_win32%"
   )
 
   set PATH=!PATH!;%vc%\bin
   if defined vc-path set PATH=!PATH!;%vc-path%
 
-  cl.exe /EHsc !include! %1 /link /LIBPATH:"%vc%\lib" /LIBPATH:"%vc-sdk%\Lib" user32.lib
+  cl.exe /O2 /EHsc !include! %1 /link /LIBPATH:"%vc%\lib" /LIBPATH:"%vc-sdk%\Lib" !link!
+
+) else if %compiler%==intel (
+
+  if not defined vc-sdk (
+    echo Не задан параметр vc-sdk
+    echo.
+    goto usage
+  )
+
+  set include=/I "%vc%\include" /I "%vc-sdk%\Include"
+  
+  if defined _boost (
+    set include=!include! /I "%_boost%"
+  )
+
+  set link=
+
+  if defined _win32 (
+    set link=!link! "%_win32%"
+  )
+
+  set PATH=!PATH!;%intel%\bin\ia32
+  if defined vc-path set PATH=!PATH!;%vc-path%
+
+  icl.exe /O2 /EHsc !include! %1 /link /LIBPATH:"%vc%\lib" /LIBPATH:"%vc-sdk%\Lib" /LIBPATH:"%intel%\lib\ia32" !link!
 
 ) else (
-  rem echo Неверно задан компилятор
+  echo Не задан компилятор
   echo.
   goto usage
 )
