@@ -75,7 +75,7 @@ if "%1"=="" (
 )
 
 
-echo %libs%
+if defined libs echo %libs%
 rem echo _boost=%_boost%
 rem echo _wx=%_wx%
 echo.
