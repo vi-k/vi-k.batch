@@ -103,12 +103,12 @@ if %compiler%==bcc (
   )
 
   set include=/I "%vc%\include" /I "%vc-sdk%\Include"
-  
+  set link=/LIBPATH:"%vc%\lib" /LIBPATH:"%vc-sdk%\Lib"
+
   if defined _boost (
     set include=!include! /I "%_boost%"
+	set link=!link! /LIBPATH:"%_boost%\stage\lib"
   )
-
-  set link=
 
   if defined _win32 (
     set link=!link! "%_win32%"
@@ -117,7 +117,7 @@ if %compiler%==bcc (
   set PATH=!PATH!;%vc%\bin
   if defined vc-path set PATH=!PATH!;%vc-path%
 
-  cl.exe /O2 /EHsc !include! %1 /link /LIBPATH:"%vc%\lib" /LIBPATH:"%vc-sdk%\Lib" !link!
+  cl.exe /MD /O2 /EHsc !include! %1 /link !link!
 
 ) else if %compiler%==intel (
 
@@ -128,12 +128,12 @@ if %compiler%==bcc (
   )
 
   set include=/I "%vc%\include" /I "%vc-sdk%\Include"
+  set link=/LIBPATH:"%vc%\lib" /LIBPATH:"%vc-sdk%\Lib" /LIBPATH:"%intel%\lib\ia32"
   
   if defined _boost (
     set include=!include! /I "%_boost%"
+	set link=!link! /LIBPATH:"%_boost%\stage\lib"
   )
-
-  set link=
 
   if defined _win32 (
     set link=!link! "%_win32%"
@@ -142,7 +142,7 @@ if %compiler%==bcc (
   set PATH=!PATH!;%intel%\bin\ia32
   if defined vc-path set PATH=!PATH!;%vc-path%
 
-  icl.exe /O2 /EHsc !include! %1 /link /LIBPATH:"%vc%\lib" /LIBPATH:"%vc-sdk%\Lib" /LIBPATH:"%intel%\lib\ia32" !link!
+  icl.exe /O2 /EHsc !include! %1 /link !link!
 
 ) else (
   echo Не задан компилятор
