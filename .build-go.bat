@@ -22,4 +22,4 @@ set wx=D:\Program Files\wxWidgets-2.8.10
 
 set win32=user32.lib
 
-.build.bat %*
+d:\My\C++\batch\.build.bat %*
