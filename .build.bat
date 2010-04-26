@@ -117,7 +117,7 @@ if %compiler%==bcc (
   set PATH=!PATH!;%vc%\bin
   if defined vc-path set PATH=!PATH!;%vc-path%
 
-  cl.exe /MD /O2 /EHsc !include! %1 /link !link!
+  cl.exe /MT /O2 /EHsc !include! %1 /link !link!
 
 ) else if %compiler%==intel (
 
@@ -142,7 +142,7 @@ if %compiler%==bcc (
   set PATH=!PATH!;%intel%\bin\ia32
   if defined vc-path set PATH=!PATH!;%vc-path%
 
-  icl.exe /O2 /EHsc !include! %1 /link !link!
+  icl.exe /MT /O2 /EHsc !include! %1 /link !link!
 
 ) else (
   echo Не задан компилятор
