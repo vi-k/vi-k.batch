@@ -68,19 +68,31 @@ goto initlibs
 
 
 :initfiles
-if "%1"=="" (
+set files=%1
+set main_file=%~n1
+shift /1
+
+:initfiles_next
+if not "%1"=="" (
+  set files=%files% %1
+  shift /1
+  goto initfiles_next
+)
+
+if not defined files (
   echo Не задан файл компиляции
   echo.
   goto usage
 )
 
-
+:compile
 if defined libs echo %libs%
 rem echo _boost=%_boost%
 rem echo _wx=%_wx%
+echo files: %files%
 echo.
 
-del %~n1.exe 2> nul
+del %main_file%.exe 2> nul
 
 if %compiler%==bcc (
 
@@ -92,7 +104,7 @@ if %compiler%==bcc (
   set PATH=!PATH!;%bcc%\bin
   if defined bcc-path set PATH=!PATH!;%bcc-path%
 
-  bcc32.exe !include! -O2 %1
+  bcc32.exe !include! -O2 %files%
 
 ) else if %compiler%==vc (
 
@@ -117,7 +129,8 @@ if %compiler%==bcc (
   set PATH=!PATH!;%vc%\bin
   if defined vc-path set PATH=!PATH!;%vc-path%
 
-  cl.exe /MT /O2 /EHsc !include! %1 /link !link!
+  REM cl.exe /MT /O2 /EHsc !include! %files% /link !link!
+  cl.exe /MTd /Od /EHsc !include! %files% /link !link!
 
 ) else if %compiler%==intel (
 
@@ -142,7 +155,7 @@ if %compiler%==bcc (
   set PATH=!PATH!;%intel%\bin\ia32
   if defined vc-path set PATH=!PATH!;%vc-path%
 
-  icl.exe /MT /O2 /EHsc !include! %1 /link !link!
+  icl.exe /MT /O2 /EHsc !include! %files% /link !link!
 
 ) else (
   echo Не задан компилятор
@@ -157,5 +170,5 @@ if not "%ERRORLEVEL%"=="0" (
 )
 
 echo.
-echo ^>%~n1.exe
-%~n1.exe
+echo ^>%main_file%.exe
+%main_file%.exe
