@@ -8,9 +8,11 @@ set intel=D:\Program Files\Intel\Compiler\11.1\054
 if "%1"=="bcc" (
   set boost=@bcc-boost
 ) else (
-  set boost=@boost-1-42
+  set boost=@boost-1-43
 )
 
+set boost-1-43=D:\Program Files\boost_1_43_0
+set boost-1-43-to=boost
 set boost-1-42=D:\Program Files\boost_1_42_0
 set boost-1-42-to=boost
 set bcc-boost=%bcc%\include\boost_1_39
