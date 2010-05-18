@@ -74,10 +74,13 @@ if defined verstate (
   set space= 
 )
 
+if "%1"=="-" goto end
+
 echo %vermajor%.%verminor%.%verrelease%%verpatch%%space%%verstate% [build %verbranch%%verbuild%] от %verdate% %vertime%
 
 if "%1"=="" (
   echo Команды:
+  echo   -       - ничего не выводить, только рассчитать переменные;
   echo   ?       - текущая версия проекта;
   echo   +       - увеличить номер билда;
   echo   branch  - добавить ветку к номеру билда;
@@ -108,7 +111,7 @@ del %unit-with-ver%.old
 
 :end
 del tmp.tmp 2>nul
-exit
+goto :eof
 
 
 rem *** getver  ***
