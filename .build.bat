@@ -114,8 +114,8 @@ if %compiler%==bcc (
     goto usage
   )
 
-  set include=/I "%vc%\include" /I "%vc-sdk%\Include"
-  set link=/LIBPATH:"%vc%\lib" /LIBPATH:"%vc-sdk%\Lib"
+  set include=/I "%vc%\VC\include" /I "%vc-sdk%\Include"
+  set link=/LIBPATH:"%vc%\VC\lib" /LIBPATH:"%vc-sdk%\Lib"
 
   if defined _boost (
     set include=!include! /I "%_boost%"
@@ -126,11 +126,37 @@ if %compiler%==bcc (
     set link=!link! "%_win32%"
   )
 
-  set PATH=!PATH!;%vc%\bin
+  set PATH=!PATH!;%vc%\VC\bin
   if defined vc-path set PATH=!PATH!;%vc-path%
 
-  REM cl.exe /MT /O2 /EHsc !include! %files% /link !link!
-  cl.exe /MTd /Od /EHsc !include! %files% /link !link!
+  cl.exe /MT /O2 /EHsc !include! %files% /link !link!
+  REM cl.exe /MTd /Od /EHsc !include! %files% /link !link!
+
+) else if %compiler%==vc10 (
+
+  if not defined vc10-sdk (
+    echo Не задан параметр vc10-sdk
+    echo.
+    goto usage
+  )
+
+  set include=/I "%vc10%\VC\include" /I "%vc10-sdk%\Include"
+  set link=/LIBPATH:"%vc10%\VC\lib" /LIBPATH:"%vc10-sdk%\Lib"
+
+  if defined _boost (
+    set include=!include! /I "%_boost%"
+	set link=!link! /LIBPATH:"%_boost%\stage\lib"
+  )
+
+  if defined _win32 (
+    set link=!link! "%_win32%"
+  )
+
+  set PATH=!PATH!;%vc10%\VC\bin
+  if defined vc10-path set PATH=!PATH!;%vc10-path%
+
+  cl.exe /MT /O2 /EHsc !include! %files% /link !link!
+  REM cl.exe /MTd /Od /EHsc !include! %files% /link !link!
 
 ) else if %compiler%==intel (
 

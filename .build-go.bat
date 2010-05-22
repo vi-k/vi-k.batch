@@ -1,13 +1,13 @@
 @echo off
 set bcc=C:\Program Files\Embarcadero\RAD Studio\7.0
 
-set vc=D:\Program Files\Microsoft Visual Studio 9.0\VC
+set vc=C:\Program Files\Microsoft Visual Studio 9.0
 set vc-sdk=C:\Program Files\Microsoft SDKs\Windows\v6.0A
 set vc-path=%vc%\Common7\IDE
 
-set intel=D:\Program Files\Intel\Compiler\11.1\054
+set intel=C:\Program Files\Intel\Compiler\11.1\054
 
-set vc10=Ñ:\Program Files\Microsoft Visual Studio 10.0\VC
+set vc10=C:\Program Files\Microsoft Visual Studio 10.0
 set vc10-sdk=C:\Program Files\Microsoft SDKs\Windows\v7.0A
 set vc10-path=%vc10%\Common7\IDE
 
