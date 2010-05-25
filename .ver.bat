@@ -78,23 +78,30 @@ if "%1"=="-" goto end
 
 echo %vermajor%.%verminor%.%verrelease%%verpatch%%space%%verstate% [build %verbranch%%verbuild%] от %verdate% %vertime%
 
-if "%1"=="" (
-  echo Команды:
-  echo   -       - ничего не выводить, только рассчитать переменные;
-  echo   ?       - текущая версия проекта;
-  echo   +       - увеличить номер билда;
-  echo   branch  - добавить ветку к номеру билда;
-  echo   state   - изменить состояние проекта ^(с alpha на beta, с beta на stable^);
-  echo   patch   - добавить patch ^(1.1.1 -^> 1.1.1a -^> 1.1.1b -^> ... 1.1.1z^);
-  echo   release - увеличить версию релиза ^(patch автоматически сбрасывается^);
-  echo   minor   - увеличить minor версию ^(release автоматически сбрасывается,
-  echo             состояние проекта становится alpha^);
-  echo   major   - увеличить major версию ^(minor автоматически сбрасывается,
-  echo             состояние проекта становится alpha^).
-  goto end
-)
-if "%1"=="?" goto end
+if "%1"=="" goto end
 
+if "%1"=="?" goto help
+if "%1"=="/?" goto help
+if "%1"=="-?" goto help
+
+goto run
+
+:help
+echo Команды:
+echo   ?       - это описание;
+echo   -       - ничего не выводить, только рассчитать переменные;
+echo   +       - увеличить номер билда;
+echo   branch  - добавить ветку к номеру билда;
+echo   state   - изменить состояние проекта ^(с alpha на beta, с beta на stable^);
+echo   patch   - добавить patch ^(1.1.1 -^> 1.1.1a -^> 1.1.1b -^> ... 1.1.1z^);
+echo   release - увеличить версию релиза ^(patch автоматически сбрасывается^);
+echo   minor   - увеличить minor версию ^(release автоматически сбрасывается,
+echo             состояние проекта становится alpha^);
+echo   major   - увеличить major версию ^(minor автоматически сбрасывается,
+echo             состояние проекта становится alpha^).
+goto end
+
+:run
 call :changever %*
 if defined error (
   echo Смена версии не произведена
