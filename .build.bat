@@ -17,7 +17,7 @@ echo   set lib-boost-trunk=D:\Program Files\boost-trunk
 echo   set lib-boost-trunk-to=boost
 echo.
 echo Запуск скрипта:
-echo   .build.bat compiler [+lib]... file
+echo   .build.bat [debug] compiler [+lib]... file
 echo.
 echo   где compiler - bcc/vc/intel
 echo       file - файл с исходными текстами
@@ -26,6 +26,11 @@ exit
 
 :init
 setlocal ENABLEDELAYEDEXPANSION
+
+if "%1"=="debug" (
+  set debug=1
+  shift /1
+)
 
 set compiler=%1
 if not defined compiler (
@@ -129,8 +134,11 @@ if %compiler%==bcc (
   set PATH=!PATH!;%vc%\VC\bin
   if defined vc-path set PATH=!PATH!;%vc-path%
 
-  cl.exe /MT /O2 /EHsc !include! %files% /link !link!
-  REM cl.exe /MTd /Od /EHsc !include! %files% /link !link!
+  if defined debug (
+    cl.exe /MTd /Od /EHsc !include! %files% /link !link!
+  ) else (
+    cl.exe /MT /O2 /EHsc !include! %files% /link !link!
+  )
 
 ) else if %compiler%==vc10 (
 
@@ -155,8 +163,11 @@ if %compiler%==bcc (
   set PATH=!PATH!;%vc10%\VC\bin
   if defined vc10-path set PATH=!PATH!;%vc10-path%
 
-  cl.exe /MT /O2 /EHsc !include! %files% /link !link!
-  REM cl.exe /MTd /Od /EHsc !include! %files% /link !link!
+  if defined debug (
+    cl.exe /MTd /Od /EHsc !include! %files% /link !link!
+  ) else (
+    cl.exe /MT /O2 /EHsc !include! %files% /link !link!
+  )
 
 ) else if %compiler%==intel (
 
