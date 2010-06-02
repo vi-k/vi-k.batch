@@ -52,11 +52,11 @@ rem ***************************************************************************
 if not defined unit-with-ver (
   echo Не задано имя модуля, содержащего информацию о версии:
   echo set unit-with-ver=имя_файла
-  exit
+  goto :eof
 )
 if not exist %unit-with-ver% (
   echo Файл %unit-with-ver% не найден
-  exit
+  goto :eof
 )
 
 set vermajor=
@@ -151,7 +151,7 @@ rem *** changever  ***
       set verstate=beta
     ) else if "%verstate%"=="" (
       echo Текущее состояние - stable. Изменить нельзя. Добавьте patch или измените версию.
-      exit
+      goto :eof
     ) else if "%verstate%"=="beta" (
       set verstate=
     ) else (
@@ -194,4 +194,3 @@ rem *** changever  ***
   )
   
 goto :eof
-
