@@ -137,7 +137,7 @@ if %compiler%==bcc (
   if defined debug (
     cl.exe /MTd /Od /EHsc !include! %files% /link !link!
   ) else (
-    cl.exe /MT /O2 /EHsc !include! %files% /link !link!
+    cl.exe /openmp /MT /O2 /EHsc !include! %files% /link !link!
   )
 
 ) else if %compiler%==vc10 (
