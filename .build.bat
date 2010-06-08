@@ -97,7 +97,7 @@ rem echo _wx=%_wx%
 echo files: %files%
 echo.
 
-del %main_file%.exe 2> nul
+REM del %main_file%.exe 2> nul
 
 if %compiler%==bcc (
 
@@ -108,6 +108,11 @@ if %compiler%==bcc (
 
   set PATH=!PATH!;%bcc%\bin
   if defined bcc-path set PATH=!PATH!;%bcc-path%
+
+  if "%files%"=="/?" (
+    bcc32.exe /?
+    goto :eof
+  )
 
   bcc32.exe !include! -O2 %files%
 
@@ -134,7 +139,13 @@ if %compiler%==bcc (
   set PATH=!PATH!;%vc%\VC\bin
   if defined vc-path set PATH=!PATH!;%vc-path%
 
+  if "%files%"=="/?" (
+    cl.exe /?
+    goto :eof
+  )
+
   if defined debug (
+    REM cl.exe /Gm /Zi /MTd /Od /EHsc !include! %files% /link !link!
     cl.exe /MTd /Od /EHsc !include! %files% /link !link!
   ) else (
     cl.exe /openmp /MT /O2 /EHsc !include! %files% /link !link!
@@ -162,6 +173,11 @@ if %compiler%==bcc (
 
   set PATH=!PATH!;%vc10%\VC\bin
   if defined vc10-path set PATH=!PATH!;%vc10-path%
+
+  if "%files%"=="/?" (
+    cl.exe /?
+    goto :eof
+  )
 
   if defined debug (
     cl.exe /MTd /Od /EHsc !include! %files% /link !link!
@@ -191,6 +207,11 @@ if %compiler%==bcc (
 
   set PATH=!PATH!;%intel%\bin\ia32
   if defined vc-path set PATH=!PATH!;%vc-path%
+
+  if "%files%"=="/?" (
+    icl.exe /?
+    goto :eof
+  )
 
   icl.exe /MT /O2 /EHsc !include! %files% /link !link!
 
