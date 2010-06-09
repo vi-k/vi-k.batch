@@ -136,6 +136,10 @@ if %compiler%==bcc (
     set link=!link! "%_win32%"
   )
 
+  if defined _my (
+    set include=!include! /I "%_my%"
+  )
+
   set PATH=!PATH!;%vc%\VC\bin
   if defined vc-path set PATH=!PATH!;%vc-path%
 
@@ -145,8 +149,8 @@ if %compiler%==bcc (
   )
 
   if defined debug (
-    REM cl.exe /Gm /Zi /MTd /Od /EHsc !include! %files% /link !link!
-    cl.exe /MTd /Od /EHsc !include! %files% /link !link!
+    cl.exe /Gm /Zi /MTd /Od /EHsc !include! %files% /link !link!
+    REM cl.exe /MTd /Od /EHsc !include! %files% /link !link!
   ) else (
     cl.exe /openmp /MT /O2 /EHsc !include! %files% /link !link!
   )
@@ -169,6 +173,10 @@ if %compiler%==bcc (
 
   if defined _win32 (
     set link=!link! "%_win32%"
+  )
+
+  if defined _my (
+    set include=!include! /I "%_my%"
   )
 
   set PATH=!PATH!;%vc10%\VC\bin
